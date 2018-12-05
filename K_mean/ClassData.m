@@ -1,0 +1,63 @@
+classdef ClassData< handle
+    properties
+        dim
+        m % N_data
+        k % co the xoa. N_groups
+        dataArray
+        true_lb
+    end
+    methods
+        %%
+        function genData(obj,zonedata) % Generate
+            for ii=1:obj.k
+                point=zonedata(ii,:);
+                dataPoint=[point(1)+(point(2)-point(1))*rand(obj.m,obj.dim)];
+                obj.dataArray=cat(1,obj.dataArray,dataPoint);
+                obj.true_lb=cat(2,obj.true_lb,ii*ones(1,obj.m));
+            end
+        end
+        function docfile(obj,foder)
+            obj.dataArray=[];
+            N_EachGroup = obj.m;
+            for i=0:9
+                for jj = 1:N_EachGroup
+                    x= strcat(foder,num2str(i),' (',num2str(jj),').png');
+                    %x= strcat('C:\Users\Administrator\Documents\MATLAB\K_mean\ime2\',num2str(i),' (',num2str(jj),').png');
+                    r=double(imread(x));
+                    cc=[];
+                    for(ii=1:32)
+                        y=r(ii,:);
+                        cc=cat(2,cc,y);
+                    end
+                    obj.dataArray=cat(1,obj.dataArray,cc);
+                end
+            end
+        end
+        %%
+        function plotData(obj,b)
+            mau=['r','b','g','y'];
+            if(obj.dim==2)
+                %                 for jj=1:obj.k
+                %                     plot(obj.dataCenter(jj,1),obj.dataCenter(jj,2),cat(2,'o',mau(jj)));hold on
+                %                 end
+                for ii=1:length(obj.dataArray)
+                    plot(obj.dataArray(ii,1),obj.dataArray(ii,2),'.','MarkerSize',26,'MarkerEdgeColor',mau(b.learned_lb(ii)));hold on
+                end
+                
+            end
+            if(obj.dim==3)
+                %                 for jj=1:obj.k
+                %                     plot3(obj.dataCenter(jj,1),obj.dataCenter(jj,2),obj.dataCenter(jj,3),cat(2,'o',mau(jj)));hold on
+                %                 end
+                for ii=1:length(obj.dataArray)
+                    plot3(obj.dataArray(ii,1),obj.dataArray(ii,2),obj.dataArray(ii,3),'.','MarkerSize',26,'MarkerEdgeColor',mau(b.learned_lb(ii)));hold on
+                end
+            end
+            if (obj.dim>3)
+                annouce=sprintf('khong ve duoc do thi');
+                disp(annouce);
+            end
+            %save()
+        end
+    end
+end
